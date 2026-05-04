@@ -478,7 +478,7 @@ async function loadDocs() {
     <div class="section-label" style="margin-top:10px;">${SECTION_ICON[sec] || '📁'} ${sec}</div>
     ${docs.map(doc => {
       const isPdf = doc.type === 'pdf';
-      const fullPath = explorerRoot + '/' + doc.rel;
+      const fullPath = (explorerRoot + '/' + doc.rel).replace(/\/+/g, '/');
       return `
       <div class="item clickable" onclick="unifiedPreview('${esc(fullPath)}', '${esc(doc.title)}', '${doc.url}')">
         <div class="item-main">

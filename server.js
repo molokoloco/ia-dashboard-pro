@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Other
 app.use('/scrap', express.static(path.join(__dirname, '../scrap')));
-app.use('/workspace', express.static(path.join(__dirname, '..')));
+app.use('/workspace', express.static(path.resolve(__dirname, '..')));
 
 // API routes
 app.use('/api/wiki', require('./api/wiki'));

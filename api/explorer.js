@@ -55,19 +55,20 @@ router.get('/', (req, res) => {
 router.get('/children', (req, res) => {
   const p = req.query.path;
   if (!p) return res.status(400).json({ error: 'path requis' });
-  // Sécurité : chemin doit rester dans ROOT
-  if (!path.resolve(p).startsWith(ROOT)) return res.status(403).json({ error: 'Accès refusé' });
-  res.json({ path: p, entries: readDir(p) });
+  const resolvedP = path.resolve(p);
+  if (!resolvedP.toLowerCase().startsWith(ROOT.toLowerCase())) return res.status(403).json({ error: 'Accès refusé' });
+  res.json({ path: resolvedP, entries: readDir(resolvedP) });
 });
 
 // GET /api/explorer/read?path= — lit un fichier texte (md, json, js…)
 router.get('/read', (req, res) => {
   const p = req.query.path;
   if (!p) return res.status(400).json({ error: 'path requis' });
-  if (!path.resolve(p).startsWith(ROOT)) return res.status(403).json({ error: 'Accès refusé' });
+  const resolvedP = path.resolve(p);
+  if (!resolvedP.toLowerCase().startsWith(ROOT.toLowerCase())) return res.status(403).json({ error: 'Accès refusé' });
   try {
-    const content = fs.readFileSync(p, 'utf8');
-    res.json({ path: p, name: path.basename(p), content });
+    const content = fs.readFileSync(resolvedP, 'utf8');
+    res.json({ path: resolvedP, name: path.basename(resolvedP), content });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
