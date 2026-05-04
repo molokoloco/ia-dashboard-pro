@@ -50,13 +50,13 @@ Several dashboard widgets read directories from this parent structure (`../wiki/
 
 | Widget | Description |
 |--------|-------------|
-| 🗂 **Explorer** | Browse local project directories with type-aware viewers (gallery, wiki, code, pdf…) |
+| 🗂 **Explorer** | Browse & **edit** project files. Unified viewer for Code (highlight), Markdown (rendered), PDF/HTML (iframe) & Images. |
 | ✅ **Todo** | Kanban-style todo list with priorities (SQLite) |
-| 💼 **Candidatures** | Job application tracker with status pipeline (SQLite) |
+| 💼 **Candidatures** | Job application tracker. View PDFs/Offers in unified poppin (SQLite) |
 | ⚡ **Sessions** | Log Claude AI work sessions with actions + files |
-| ✍️ **Articles & Wiki** | Live WordPress articles + local Markdown wiki |
-| 🗂️ **Docs** | Quick access to personal Markdown docs and PDFs |
-| 🧩 **Claude Skills** | Browse your local Claude Code skills catalog |
+| ✍️ **Articles & Wiki** | Live WordPress articles + local Markdown wiki preview |
+| 🗂️ **Docs** | Quick access to personal Markdown docs and PDFs in unified poppin |
+| 🧩 **Claude Skills** | Browse & read your local Claude Code skills catalog |
 | 📜 **Scripts** | List available Node.js automation scripts |
 
 ---
@@ -203,6 +203,8 @@ dashboard/
 | GET | `/api/docs` | Markdown docs + PDF index |
 | GET | `/api/skills` | Claude Skills catalog |
 | GET | `/api/explorer` | Directory listing |
+| GET | `/api/explorer/read` | Read file content (UTF-8) |
+| POST | `/api/explorer/save` | Save file content (UTF-8) |
 
 ---
 
@@ -221,7 +223,7 @@ The SQLite database (`dashboard.db`) is created automatically on first run and i
 ## 🔒 Security notes
 
 - **Local use only.** This dashboard is designed to run on `localhost`. Do not expose it on a public network.
-- **`api/explorer.js`** allows browsing and reading files from the parent directory tree. By design, for local developer use.
+- **`api/explorer.js`** allows browsing, reading, and **writing** files from the parent directory tree. This is a local development tool; ensure your project root is safe.
 - `config.js` is gitignored. Your credentials stay on your machine.
 
 ---
@@ -243,6 +245,7 @@ The [`examples/`](examples/) directory contains anonymized reference files to he
 - **Server:** Express 5
 - **Database:** better-sqlite3 (SQLite)
 - **Markdown:** marked
+- **Syntax Highlighting:** Prism.js
 - **Frontend:** Vanilla JS + CSS (no build step)
 
 ---

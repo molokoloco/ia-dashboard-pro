@@ -71,6 +71,18 @@ router.get('/read', (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// POST /api/explorer/save — enregistre un fichier
+router.post('/save', (req, res) => {
+  const { path: p, content } = req.body;
+  if (!p) return res.status(400).json({ error: 'path requis' });
+  if (!path.resolve(p).startsWith(ROOT)) return res.status(403).json({ error: 'Accès refusé' });
+  
+  try {
+    fs.writeFileSync(p, content, 'utf8');
+    res.json({ ok: true, path: p, size: content.length });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // GET /api/explorer/open?path= — ouvre dans Explorer Windows
 router.get('/open', (req, res) => {
   const p = req.query.path;

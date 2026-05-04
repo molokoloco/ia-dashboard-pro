@@ -1,7 +1,7 @@
 {
   "name": "ia-dashboard-pro",
   "version": "1.0.0",
-  "description": "Local developer dashboard — todos, wiki, WordPress articles, Claude sessions log",
+  "description": "Local developer dashboard & file editor — todos, wiki, WordPress, Claude sessions log",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

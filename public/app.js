@@ -50,19 +50,138 @@ function esc(str) {
     .replace(/'/g, '&#39;');
 }
 
-// ── Modal Markdown générique ──────────────────────────────
-function openMdModal({ title, description, tags, html }) {
+// ── Modal Unifiée (Markdown, Code, Iframe, Image) ─────────
+let currentFilePath = null;
+let currentRawContent = '';
+
+function openMdModal({ title, description, tags, html, raw, path, type, url }) {
+  currentFilePath = path || null;
+  currentRawContent = raw || '';
+  
   $('md-modal-title').textContent = title || '';
   $('md-modal-desc').textContent = description || '';
   $('md-modal-tags').innerHTML = tags?.length
     ? tags.map(t => `<span class="tag tag-${t.replace(/[^a-z]/g, '')}">${esc(t)}</span>`).join('')
     : '';
-  $('md-modal-body').innerHTML = html || '<p style="color:var(--muted)">Aucun contenu.</p>';
+
+  // Reset visibilité
+  const containers = ['md-modal-body', 'md-modal-edit', 'md-modal-iframe', 'md-modal-img'];
+  containers.forEach(id => $(id).style.display = 'none');
+  
+  $('md-modal-external').style.display = url ? 'block' : 'none';
+  if (url) $('md-modal-external').href = url;
+
+  if (type === 'img') {
+    $('md-modal-img').style.display = 'block';
+    $('md-img').src = url;
+    $('btn-edit').style.display = 'none';
+  } else if (type === 'iframe') {
+    $('md-modal-iframe').style.display = 'block';
+    $('md-iframe').src = url;
+    $('btn-edit').style.display = 'none';
+  } else {
+    // Mode texte/markdown/code
+    $('md-modal-body').style.display = 'block';
+    $('md-modal-body').innerHTML = html || '<p style="color:var(--muted)">Aucun contenu.</p>';
+    $('editor-textarea').value = currentRawContent;
+    $('btn-edit').style.display = currentFilePath ? 'block' : 'none';
+    
+    if (html && html.includes('<code')) {
+      Prism.highlightAllUnder($('md-modal-body'));
+    }
+  }
+
+  $('btn-edit').textContent = '✏️ Éditer';
+  $('btn-save').style.display = 'none';
   $('md-modal').classList.add('open');
-  $('md-modal-body').scrollTop = 0;
+  if (type !== 'iframe' && type !== 'img') $('md-modal-body').scrollTop = 0;
 }
+
+async function unifiedPreview(path, name, url) {
+  const ext = (path || url || '').split('.').pop().toLowerCase();
+  const textExtensions = ['md', 'js', 'json', 'css', 'txt', 'php']; // Retrait de 'html' ici pour prioriser l'iframe
+  const imgExtensions = ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'];
+  
+  if (textExtensions.includes(ext)) {
+    try {
+      const d = await api(`/api/explorer/read?path=${encodeURIComponent(path)}`);
+      const content = d.content || '';
+      let html = '';
+      if (ext === 'md') {
+        html = marked.parse(content);
+      } else {
+        const langMap = { js:'javascript', css:'css', json:'json', php:'php' };
+        const lang = langMap[ext] || 'clike';
+        html = `<pre class="language-${lang}"><code class="language-${lang}">${esc(content)}</code></pre>`;
+      }
+      openMdModal({ title: name, html, raw: content, path, url });
+    } catch (e) {
+      openMdModal({ title: name, html: `<p style="color:var(--red)">Erreur lecture: ${e.message}</p>` });
+    }
+  } else if (imgExtensions.includes(ext)) {
+    openMdModal({ title: name, type: 'img', url });
+  } else if (ext === 'pdf' || ext === 'html') {
+    openMdModal({ title: name, type: 'iframe', url });
+  } else {
+    // Tenter ouverture système pour le reste
+    fetch(`/api/explorer/open?path=${encodeURIComponent(path)}`);
+  }
+}
+
+function toggleEditMode() {
+  const isEditing = $('md-modal-edit').style.display === 'block';
+  if (isEditing) {
+    // Cancel edit
+    $('md-modal-body').style.display = 'block';
+    $('md-modal-edit').style.display = 'none';
+    $('btn-edit').textContent = '✏️ Éditer';
+    $('btn-save').style.display = 'none';
+  } else {
+    // Start edit
+    $('md-modal-body').style.display = 'none';
+    $('md-modal-edit').style.display = 'block';
+    $('btn-edit').textContent = '🚫 Annuler';
+    $('btn-save').style.display = 'block';
+    $('editor-textarea').focus();
+  }
+}
+
+async function saveCurrentFile() {
+  if (!currentFilePath) return;
+  const content = $('editor-textarea').value;
+  try {
+    const res = await api('/api/explorer/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: currentFilePath, content })
+    });
+    if (res.ok) {
+      showToast('✅ Fichier enregistré');
+      // Update preview
+      currentRawContent = content;
+      const ext = currentFilePath.split('.').pop().toLowerCase();
+      if (ext === 'md') {
+        $('md-modal-body').innerHTML = marked.parse(content);
+      } else {
+        const langMap = { js:'javascript', html:'markup', css:'css', json:'json' };
+        const lang = langMap[ext] || 'clike';
+        $('md-modal-body').innerHTML = `<pre class="language-${lang}"><code class="language-${lang}">${esc(content)}</code></pre>`;
+        Prism.highlightAllUnder($('md-modal-body'));
+      }
+      toggleEditMode();
+    } else {
+      alert('Erreur lors de la sauvegarde : ' + res.error);
+    }
+  } catch (e) {
+    alert('Erreur réseau : ' + e.message);
+  }
+}
+
 function closeMdModal() {
   $('md-modal').classList.remove('open');
+  $('md-iframe').src = 'about:blank';
+  $('md-img').src = '';
+  currentFilePath = null;
 }
 $('md-modal').addEventListener('click', e => {
   if (e.target === $('md-modal')) closeMdModal();
@@ -146,24 +265,25 @@ async function loadCandidatures() {
   if (!items.length) { body.innerHTML = '<div class="empty">Aucun fichier</div>'; return; }
 
   body.innerHTML = items.map(item => {
-    if (item._type === 'cv') return `
-      <div class="item">
+    if (item._type === 'cv') {
+      const path = `../../cv/${item.filename}`; // Chemin relatif pour l'API read
+      return `
+      <div class="item clickable" onclick="unifiedPreview('${esc(path)}', '${esc(item.filename)}', '${item.url}')">
         <div class="item-main">
-          <div class="item-title">
-            <a href="${item.url}" target="_blank">${esc(item.filename)}</a>
-          </div>
+          <div class="item-title">${esc(item.filename)}</div>
           <div class="item-meta">${fmtDate(item._date)} · ${fmtSize(item.size)}</div>
         </div>
         <span class="type-pill">${item.ext}</span>
       </div>`;
+    }
 
+    const offerUrl = `/static/offres/${encodeURIComponent(item.filename)}`;
+    const offerPath = `../../Offres/${item.filename}`;
     return `
       <div class="item">
-        <div class="item-main">
+        <div class="item-main clickable" onclick="unifiedPreview('${esc(offerPath)}', '${esc(item.company || item.filename)}', '${offerUrl}')">
           <div class="item-title">
-            <a href="/static/offres/${encodeURIComponent(item.filename)}" target="_blank">
-              ${esc(item.company || item.filename)}
-            </a>
+            ${esc(item.company || item.filename)}
             ${item.role ? `<span style="color:var(--muted)"> · ${esc(item.role)}</span>` : ''}
           </div>
           <div class="item-meta">${fmtDate(item._date)}</div>
@@ -356,24 +476,19 @@ async function loadDocs() {
 
   body.innerHTML = Object.entries(sections).map(([sec, docs]) => `
     <div class="section-label" style="margin-top:10px;">${SECTION_ICON[sec] || '📁'} ${sec}</div>
-    ${docs.map(doc => doc.type === 'pdf' ? `
-      <div class="item">
+    ${docs.map(doc => {
+      const isPdf = doc.type === 'pdf';
+      const path = doc.path || `../../${doc.section || 'docs'}/${doc.slug}${isPdf ? '.pdf' : '.md'}`;
+      return `
+      <div class="item clickable" onclick="unifiedPreview('${esc(path)}', '${esc(doc.title)}', '${doc.url}')">
         <div class="item-main">
-          <div class="item-title"><a href="${doc.url}" target="_blank">📑 ${esc(doc.title)}</a></div>
-          ${renderTags(doc.tags)}
-        </div>
-        <span class="type-pill">pdf</span>
-      </div>
-    ` : `
-      <div class="item clickable" onclick="openDocPreview('${esc(doc.slug)}', '${esc(doc.title)}')">
-        <div class="item-main">
-          <div class="item-title">${esc(doc.title)}</div>
+          <div class="item-title">${isPdf ? '📑 ' : ''}${esc(doc.title)}</div>
           ${doc.description ? `<div class="item-meta" style="margin-bottom:4px;">${esc(doc.description.slice(0, 90))}${doc.description.length > 90 ? '…' : ''}</div>` : ''}
           ${renderTags(doc.tags)}
         </div>
-        <span class="type-pill">md</span>
-      </div>
-    `).join('')}
+        <span class="type-pill">${doc.type}</span>
+      </div>`;
+    }).join('')}
   `).join('');
 }
 
@@ -513,21 +628,15 @@ function trunc(s,n)   { return s.length>n ? s.slice(0,n-1)+'…' : s; }
 
 // ── Viewer ────────────────────────────────────────────────
 async function explorerPreviewFile(path, name, ext) {
-  const rel  = path.replace(explorerRoot,'').replace(/\\/g,'/');
-  const url  = 'http://localhost:3456' + rel;
-  if (ext==='.md') {
-    try {
-      const d = await api(`/api/explorer/read?path=${encodeURIComponent(path)}`);
-      openMdModal({ title: name.replace(/\.md$/,'').replace(/-/g,' '), html: marked.parse(d.content||'') });
-    } catch { openMdModal({ title: name, html:'<p style="color:var(--red)">Erreur lecture</p>' }); }
-  } else if (ext==='.html' || ext==='.pdf') {
-    $('file-viewer-title').textContent = (ext==='.pdf'?'📑 ':'🌐 ') + name;
-    $('file-viewer-link').href = url;
-    $('file-viewer-frame').src = url;
-    $('file-viewer').style.display = 'flex';
-  } else {
-    fetch(`/api/explorer/open?path=${encodeURIComponent(path)}`);
-  }
+  const rel = path.replace(explorerRoot,'').replace(/\\/g,'/');
+  // Utilise la nouvelle route statique /workspace du serveur
+  const url = '/workspace' + rel; 
+  unifiedPreview(path, name, url);
+}
+
+function closeFileViewer() {
+  // OBSOLETE - On utilise closeMdModal maintenant
+  closeMdModal();
 }
 function closeFileViewer() {
   $('file-viewer').style.display='none';

@@ -587,6 +587,18 @@ main {
 .md-modal-body hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 .md-modal-body strong { color: var(--text); font-weight: 600; }
 
+/* Editor specific */
+#md-modal-edit {
+  height: 65vh;
+}
+#editor-textarea {
+  line-height: 1.6;
+  tab-size: 2;
+}
+#editor-textarea::-webkit-scrollbar { width: 8px; }
+#editor-textarea::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+#editor-textarea::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
 /* ── Modal action ────────────────────────────────────────── */
 .modal-form-inner {
   background: var(--surface);
