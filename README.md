@@ -91,6 +91,12 @@ node server.js
 
 [![Screencapture ia dashboard pro](https://github.com/molokoloco/ia-dashboard-pro/blob/main/screencapture-ia-dashboard-pro.png?raw=true "Demo in progress")](https://github.com/molokoloco/ia-dashboard-pro/blob/main/screencapture-ia-dashboard-pro.png)
 
+
+Youtube demo video:
+
+[![IA Dashboard Pro](https://github.com/molokoloco/ia-dashboard-pro/blob/main/images/youtube-ia-dashboard-pro.jpg?raw=true "Demo in progress")](https://www.youtube.com/watch?v=yHKCYgfwwrM)
+[https://www.youtube.com/watch?v=yHKCYgfwwrM](https://www.youtube.com/watch?v=yHKCYgfwwrM)
+
 ---
 
 ## 🛠️ Installation
