@@ -41,7 +41,18 @@ router.get('/', (req, res) => {
     const stat = fs.statSync(filepath);
     const content = fs.readFileSync(filepath, 'utf-8');
     const { title, description, h2s } = extractMeta(content, rel);
-    return { slug: rel.replace(/\//g, '__').replace('.md', ''), rel, title, description, tags, h2s, modified: stat.mtime, section: 'Références' };
+    return { 
+      slug: rel.replace(/\//g, '__').replace('.md', ''), 
+      rel, 
+      title, 
+      description, 
+      tags, 
+      h2s, 
+      type: 'md',
+      url: `/workspace/${rel}`,
+      modified: stat.mtime, 
+      section: 'Références' 
+    };
   }).filter(Boolean);
 
   // PDFs dans Julien-ia
@@ -60,7 +71,7 @@ router.get('/', (req, res) => {
           description: '',
           tags: baseTags,
           type: 'pdf',
-          url: `/static/julien-ia/${encodeURIComponent(f)}`,
+          url: `/workspace/${dir}/${encodeURIComponent(f)}`,
           modified: stat.mtime,
           section: dir,
         });
@@ -80,7 +91,18 @@ router.get('/', (req, res) => {
         const stat = fs.statSync(filepath);
         const content = fs.readFileSync(filepath, 'utf-8');
         const { title, description, h2s } = extractMeta(content, rel);
-        dynamic.push({ slug: rel.replace(/\//g, '__').replace('.md', ''), rel, title, description, tags: baseTags, h2s, modified: stat.mtime, section: dir });
+        dynamic.push({ 
+          slug: rel.replace(/\//g, '__').replace('.md', ''), 
+          rel, 
+          title, 
+          description, 
+          tags: baseTags, 
+          h2s, 
+          type: 'md',
+          url: `/workspace/${rel}`,
+          modified: stat.mtime, 
+          section: dir 
+        });
       });
   }
   dynamic.sort((a, b) => new Date(b.modified) - new Date(a.modified));

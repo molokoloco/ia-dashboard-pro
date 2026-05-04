@@ -266,7 +266,7 @@ async function loadCandidatures() {
 
   body.innerHTML = items.map(item => {
     if (item._type === 'cv') {
-      const path = `../../cv/${item.filename}`; // Chemin relatif pour l'API read
+      const path = explorerRoot + '/cv/' + item.filename;
       return `
       <div class="item clickable" onclick="unifiedPreview('${esc(path)}', '${esc(item.filename)}', '${item.url}')">
         <div class="item-main">
@@ -278,7 +278,7 @@ async function loadCandidatures() {
     }
 
     const offerUrl = `/static/offres/${encodeURIComponent(item.filename)}`;
-    const offerPath = `../../Offres/${item.filename}`;
+    const offerPath = explorerRoot + '/Offres/' + item.filename;
     return `
       <div class="item">
         <div class="item-main clickable" onclick="unifiedPreview('${esc(offerPath)}', '${esc(item.company || item.filename)}', '${offerUrl}')">
@@ -478,9 +478,9 @@ async function loadDocs() {
     <div class="section-label" style="margin-top:10px;">${SECTION_ICON[sec] || '📁'} ${sec}</div>
     ${docs.map(doc => {
       const isPdf = doc.type === 'pdf';
-      const path = doc.path || `../../${doc.section || 'docs'}/${doc.slug}${isPdf ? '.pdf' : '.md'}`;
+      const fullPath = explorerRoot + '/' + doc.rel;
       return `
-      <div class="item clickable" onclick="unifiedPreview('${esc(path)}', '${esc(doc.title)}', '${doc.url}')">
+      <div class="item clickable" onclick="unifiedPreview('${esc(fullPath)}', '${esc(doc.title)}', '${doc.url}')">
         <div class="item-main">
           <div class="item-title">${isPdf ? '📑 ' : ''}${esc(doc.title)}</div>
           ${doc.description ? `<div class="item-meta" style="margin-bottom:4px;">${esc(doc.description.slice(0, 90))}${doc.description.length > 90 ? '…' : ''}</div>` : ''}
