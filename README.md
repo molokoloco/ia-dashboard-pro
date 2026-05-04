@@ -61,6 +61,19 @@ Several dashboard widgets read directories from this parent structure (`../wiki/
 
 ---
 
+## 🖼️ Unified Modal Viewer & Editor
+
+The dashboard features a centralized, intelligent preview system. Instead of opening new tabs, all files are opened in a premium dark-themed modal:
+
+*   **📝 Markdown**: Fully rendered HTML preview using `marked.js`.
+*   **💻 Code Highlighting**: Syntax highlighting for `JS`, `HTML`, `CSS`, `JSON`, `PHP`, `SQL`, and more via `Prism.js`.
+*   **📑 Documents**: Integrated `Iframe` viewer for `PDF` and `HTML` files (perfect for CVs and reports).
+*   **🖼️ Media Gallery**: Centered preview for `PNG`, `JPG`, `SVG`, `WebP`, and `GIF`.
+*   **✏️ In-App Editing**: Edit any text-based file directly in the modal and save changes to your local disk with one click.
+*   **↗️ Quick Access**: Shortcut button to open the raw file in a new tab if needed.
+
+---
+
 ## ⚡ TL;DR
 
 ```bash
