@@ -1,0 +1,30 @@
+{
+  "name": "julienweb-dashboard",
+  "version": "1.0.0",
+  "description": "Local developer dashboard — todos, wiki, WordPress articles, Claude sessions log",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.9.0",
+    "express": "^5.2.1",
+    "marked": "^18.0.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/molokoloco/julienweb-dashboard.git"
+  },
+  "keywords": [
+    "dashboard",
+    "local",
+    "developer-tools",
+    "wordpress",
+    "sqlite",
+    "express",
+    "claude"
+  ],
+  "author": "Julien Guézennec <https://julienweb.fr>"
+}

@@ -1,0 +1,24 @@
+# Config locale (contient les credentials et chemins personnels)
+config.js
+widgets.json
+
+# Base de données SQLite
+*.db
+
+# Journal de sessions (données personnelles)
+sessions-log.json
+
+# Dépendances
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Fichiers système
+desktop.ini
+.DS_Store
+Thumbs.db
+
+# Claude Code (settings locaux)
+.claude/

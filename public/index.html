@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Julien</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Squada+One&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><span class="logo">🚀</span> Dashboard Julien</h1>
+    <div id="clock"></div>
+  </header>
+
+  <main>
+    <!-- Explorer -->
+    <div class="widget" id="w-explorer">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">🗂</span> Explorateur</div>
+        <div class="widget-actions">
+          <span class="badge" id="badge-explorer">–</span>
+          <button class="btn btn-sm btn-ghost" onclick="openExplorerRoot()" title="Ouvrir racine dans Explorer">📂</button>
+        </div>
+      </div>
+      <div class="widget-body tall" id="body-explorer" style="padding:0; overflow-y:auto; max-height:420px;">
+        <div class="loading" style="padding:16px;">Chargement</div>
+      </div>
+    </div>
+
+    <!-- Todo -->
+    <div class="widget" id="w-todo">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">✅</span> Todo</div>
+        <span class="badge" id="badge-todo">–</span>
+      </div>
+      <div class="todo-input-row">
+        <input type="text" id="todo-input" placeholder="Nouvelle tâche…" />
+        <select id="todo-priority">
+          <option value="normal">Normal</option>
+          <option value="haute">Haute</option>
+          <option value="basse">Basse</option>
+        </select>
+        <button class="btn btn-sm" onclick="addTodo()">+</button>
+      </div>
+      <div class="widget-body" id="body-todo"><div class="loading">Chargement</div></div>
+    </div>
+
+    <!-- CVs + Candidatures fusionnés -->
+    <div class="widget" id="w-candidatures">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">💼</span> CVs & Candidatures</div>
+        <span class="badge" id="badge-cand">–</span>
+      </div>
+      <div class="widget-body tall" id="body-cand"><div class="loading">Chargement</div></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="widget" id="w-actions">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">⚡</span> Actions récentes</div>
+        <div class="widget-actions">
+          <span class="badge" id="badge-actions">–</span>
+          <button class="btn btn-sm btn-ghost" onclick="showActionForm()">+ Log</button>
+        </div>
+      </div>
+      <div class="widget-body" id="body-actions"><div class="loading">Chargement</div></div>
+    </div>
+
+    <!-- Articles + Wiki fusionnés -->
+    <div class="widget span2" id="w-articles">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">✍️</span> Articles & Wiki</div>
+        <div class="widget-actions">
+          <span class="badge" id="badge-articles">–</span>
+          <a href="https://julienweb.fr/wp-admin/post-new.php" target="_blank" class="btn btn-sm btn-ghost">+ Article</a>
+        </div>
+      </div>
+      <div class="widget-body tall" id="body-articles"><div class="loading">Chargement</div></div>
+    </div>
+
+    <!-- Docs / Préférences -->
+    <div class="widget span2" id="w-docs">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">🗂️</span> Docs & Préférences</div>
+        <span class="badge" id="badge-docs">–</span>
+      </div>
+      <div class="widget-body tall" id="body-docs"><div class="loading">Chargement</div></div>
+    </div>
+
+    <!-- Skills -->
+    <div class="widget" id="w-skills">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">🧩</span> Claude Skills</div>
+        <div class="widget-actions">
+          <span class="badge" id="badge-skills">–</span>
+          <input type="text" id="skills-search" placeholder="Rechercher…"
+            style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);font-size:12px;outline:none;width:140px;">
+        </div>
+      </div>
+      <div class="widget-body" style="max-height:none; padding:0; overflow-y:auto;" id="body-skills">
+        <div class="loading">Chargement</div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <div class="widget span2" id="w-scripts">
+      <div class="widget-header">
+        <div class="widget-title"><span class="icon">📜</span> Scripts Node.js disponibles</div>
+        <div class="widget-actions">
+          <span class="badge" id="badge-scripts">–</span>
+        </div>
+      </div>
+      <div class="widget-body" id="body-scripts" style="overflow-y:auto; max-height:300px;"><div class="loading">Chargement</div></div>
+    </div>
+
+  </main>
+
+  <!-- Modal Markdown générique (wiki, docs, skills) -->
+  <div id="md-modal" class="md-modal">
+    <div class="md-modal-inner">
+      <div class="md-modal-header">
+        <div class="md-modal-header-text">
+          <div id="md-modal-title" class="md-modal-title"></div>
+          <div id="md-modal-desc" class="md-modal-desc"></div>
+          <div id="md-modal-tags" class="tags"></div>
+        </div>
+        <button class="btn-icon" onclick="closeMdModal()" style="font-size:20px; margin-top:-2px;">×</button>
+      </div>
+      <div id="md-modal-body" class="md-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal log session -->
+  <div id="modal-action" style="display:none; position:fixed; inset:0; background:rgba(24,22,40,.8); backdrop-filter:blur(4px); z-index:200; align-items:center; justify-content:center;">
+    <div class="modal-form-inner" style="width:520px;">
+      <div class="modal-form-title">📝 Nouvelle session</div>
+      <input type="text" id="session-title-input" placeholder="Titre de la session…" class="form-input">
+      <textarea id="session-summary-input" placeholder="Résumé (une phrase)…" class="form-input" rows="2" style="resize:vertical;"></textarea>
+      <textarea id="session-actions-input" placeholder="Actions réalisées (une par ligne)…" class="form-input" rows="4" style="resize:vertical;"></textarea>
+      <input type="text" id="session-files-input" placeholder="Fichiers modifiés (séparés par virgule)…" class="form-input" style="margin-bottom:16px;">
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="hideActionForm()">Annuler</button>
+        <button class="btn" onclick="submitAction()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Iframe viewer modal (html / pdf) -->
+  <div id="file-viewer" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(10,8,28,.96);flex-direction:column;">
+    <div style="background:#221f3a;border-bottom:1px solid #3a3660;padding:10px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;">
+      <div id="file-viewer-title" style="font-family:'Squada One',sans-serif;font-size:16px;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+      <a id="file-viewer-link" href="#" target="_blank" style="font-size:11px;padding:4px 12px;border-radius:6px;background:#5A4095;color:#fff;text-decoration:none;font-weight:600;flex-shrink:0;">↗ Ouvrir</a>
+      <button onclick="closeFileViewer()" style="font-size:22px;color:#9b96c0;background:none;border:none;cursor:pointer;padding:0 4px;line-height:1;">✕</button>
+    </div>
+    <iframe id="file-viewer-frame" src="about:blank" style="flex:1;border:none;width:100%;background:#fff;"></iframe>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
