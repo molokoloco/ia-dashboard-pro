@@ -38,6 +38,10 @@ node server.js
 # → http://localhost:3001
 ```
 
+✅ Final result
+
+[![Screencapture ia dashboard pro](https://github.com/molokoloco/ia-dashboard-pro/blob/main/images/screencapture-ia-dashboard-pro.png?raw=true "Demo in progress")](https://github.com/molokoloco/ia-dashboard-pro/blob/main/screencapture-ia-dashboard-pro.png)
+
 ---
 
 ## 🛠️ Installation
