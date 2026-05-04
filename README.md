@@ -94,7 +94,7 @@ node server.js
 
 Youtube demo video:
 
-[![IA Dashboard Pro](https://github.com/molokoloco/ia-dashboard-pro/blob/main/images/youtube-ia-dashboard-pro.jpg?raw=true "Demo in progress")](https://www.youtube.com/watch?v=yHKCYgfwwrM)
+[![IA Dashboard Pro](https://github.com/molokoloco/ia-dashboard-pro/blob/main/youtube-ia-dashboard-pro.jpg?raw=true "Demo in progress")](https://www.youtube.com/watch?v=yHKCYgfwwrM)
 [https://www.youtube.com/watch?v=yHKCYgfwwrM](https://www.youtube.com/watch?v=yHKCYgfwwrM)
 
 ---
