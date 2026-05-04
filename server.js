@@ -14,7 +14,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Other
 app.use('/scrap', express.static(path.join(__dirname, '../scrap')));
-app.use('/workspace', express.static(path.resolve(__dirname, '..')));
 
 // API routes
 app.use('/api/wiki', require('./api/wiki'));
@@ -30,6 +29,10 @@ app.use('/api/explorer', require('./api/explorer'));
 app.use('/api/scripts', require('./api/scripts'));
 
 const PORT = process.env.PORT || 3001;
+const workspaceRoot = path.resolve(__dirname, '..');
+console.log('  Workspace: ' + workspaceRoot);
+app.use('/workspace', express.static(workspaceRoot));
+
 app.listen(PORT, () => {
   console.log(`\n  Dashboard: http://localhost:${PORT}\n`);
 });

@@ -478,9 +478,10 @@ async function loadDocs() {
     <div class="section-label" style="margin-top:10px;">${SECTION_ICON[sec] || '📁'} ${sec}</div>
     ${docs.map(doc => {
       const isPdf = doc.type === 'pdf';
-      const fullPath = (explorerRoot + '/' + doc.rel).replace(/\/+/g, '/');
+      let rel = doc.rel.startsWith('/') ? doc.rel.slice(1) : doc.rel;
+      const fullPath = explorerRoot + '/' + rel;
       return `
-      <div class="item clickable" onclick="unifiedPreview('${esc(fullPath)}', '${esc(doc.title)}', '${doc.url}')">
+      <div class="item clickable" onclick="unifiedPreview('${esc(fullPath.replace(/\\/g, '/'))}', '${esc(doc.title)}', '${doc.url}')">
         <div class="item-main">
           <div class="item-title">${isPdf ? '📑 ' : ''}${esc(doc.title)}</div>
           ${doc.description ? `<div class="item-meta" style="margin-bottom:4px;">${esc(doc.description.slice(0, 90))}${doc.description.length > 90 ? '…' : ''}</div>` : ''}
@@ -742,7 +743,7 @@ function copyScriptCmd(scriptName) {
 }
 
 // ── Init + auto-refresh ───────────────────────────────────
-function loadAll() {
+async function loadAll() {
   loadTodos();
   loadCandidatures();
   loadArticles();
@@ -751,7 +752,17 @@ function loadAll() {
   loadScripts();
 }
 
-loadAll();
-loadSkills();
-loadExplorer();
+async function init() {
+  try {
+    // On charge la racine en premier car tous les widgets en ont besoin pour les previews
+    const data = await api('/api/explorer');
+    explorerRoot = data.root || '';
+  } catch(e) { console.error("Erreur init explorerRoot:", e); }
+  
+  await loadAll();
+  loadSkills();
+  loadExplorer();
+}
+
+init();
 setInterval(loadAll, 60000);
