@@ -1,4 +1,4 @@
-# 🚀 JulienWeb Dashboard
+# 🚀 IA Dashboard Pro
 
 [![Node](https://img.shields.io/badge/node-%3E=18-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Express](https://img.shields.io/badge/express-5.x-000000?logo=express&logoColor=white)](https://expressjs.com)
@@ -30,8 +30,8 @@ Built to run **locally on your own machine** as a developer command center. Not 
 ## ⚡ TL;DR
 
 ```bash
-git clone https://github.com/molokoloco/julienweb-dashboard.git
-cd julienweb-dashboard
+git clone https://github.com/molokoloco/ia-dashboard-pro.git
+cd ia-dashboard-pro
 npm install
 cp config.example.js config.js   # then edit with your values
 node server.js
@@ -45,8 +45,8 @@ node server.js
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/molokoloco/julienweb-dashboard.git
-cd julienweb-dashboard
+git clone https://github.com/molokoloco/ia-dashboard-pro.git
+cd ia-dashboard-pro
 npm install
 ```
 
