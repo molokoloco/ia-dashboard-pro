@@ -82,6 +82,26 @@ header h1 span.logo { font-size: 22px; }
   letter-spacing: .2px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.github-link:hover {
+  transform: scale(1.1);
+}
+
+.github-link svg {
+  display: block;
+}
+
 /* ── Grid layout ─────────────────────────────────────────── */
 main {
   padding: 28px;
