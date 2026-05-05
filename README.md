@@ -255,6 +255,7 @@ The [`examples/`](examples/) directory contains anonymized reference files to he
 |------|-------------|
 | [`examples/workspace-structure.md`](examples/workspace-structure.md) | Full workspace layout with explanations |
 | [`examples/PLAYBOOK.example.md`](examples/PLAYBOOK.example.md) | Anonymized PLAYBOOK — workflows, WP patterns, SEO automation |
+| [`examples/CLAUDE.example.md`](examples/CLAUDE.example.md) | Anonymized CLAUDE.md — behavioral guide + critical rules + wrap-up protocol |
 
 ---
 
