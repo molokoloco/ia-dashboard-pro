@@ -31,7 +31,20 @@ app.use('/api/scripts', require('./api/scripts'));
 const PORT = process.env.PORT || 3001;
 const workspaceRoot = path.resolve(__dirname, '..');
 console.log('  Workspace: ' + workspaceRoot);
-app.use('/workspace', express.static(workspaceRoot));
+
+// Middleware to block sensitive files in /workspace
+const blocked = [
+  '.git', '.claude', 'node_modules', 'config.js', 'package-lock.json', 
+  '.env', 'dashboard.db', 'sessions-log.json', '.obsidian'
+];
+
+app.use('/workspace', (req, res, next) => {
+  const isBlocked = blocked.some(p => req.path.includes(`/${p}/`) || req.path.endsWith(`/${p}`) || req.path === `/${p}`);
+  if (isBlocked || req.path.split('/').some(part => part.startsWith('.'))) {
+    return res.status(403).send('Access Forbidden');
+  }
+  next();
+}, express.static(workspaceRoot));
 
 app.listen(PORT, () => {
   console.log(`\n  Dashboard: http://localhost:${PORT}\n`);

@@ -1,10 +1,6 @@
-// api/explorer.js
-// Liste le répertoire de travail + ouvre dans l'explorateur Windows
-// ⚠️  LOCAL USE ONLY — designed to run on your own machine, not exposed to the internet.
-
 const express = require('express');
 const router  = express.Router();
-const fs      = require('fs');
+const fs      = require('fs').promises;
 const path    = require('path');
 const { exec } = require('child_process');
 const cfg = require('../config');
@@ -17,9 +13,9 @@ router.get('/config', (req, res) => {
 const ROOT = path.resolve(__dirname, '..', '..');
 const IGNORE = new Set(['node_modules', 'desktop.ini', '.git', '.claude', 'package-lock.json']);
 
-function statEntry(fullPath, name) {
+async function statEntry(fullPath, name) {
   try {
-    const stat = fs.statSync(fullPath);
+    const stat = await fs.stat(fullPath);
     return {
       name,
       path: fullPath,
@@ -31,12 +27,12 @@ function statEntry(fullPath, name) {
   } catch { return null; }
 }
 
-function readDir(dirPath) {
+async function readDir(dirPath) {
   try {
-    return fs.readdirSync(dirPath)
-      .filter(n => !IGNORE.has(n) && !n.startsWith('.'))
-      .map(n => statEntry(path.join(dirPath, n), n))
-      .filter(Boolean)
+    const files = await fs.readdir(dirPath);
+    const filtered = files.filter(n => !IGNORE.has(n) && !n.startsWith('.'));
+    const entries = await Promise.all(filtered.map(n => statEntry(path.join(dirPath, n), n)));
+    return entries.filter(Boolean)
       .sort((a, b) => {
         if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
         return a.name.localeCompare(b.name);
@@ -45,61 +41,66 @@ function readDir(dirPath) {
 }
 
 // GET /api/explorer — liste racine
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const p = req.query.path || ROOT;
-  const entries = readDir(p);
+  const entries = await readDir(p);
   res.json({ root: ROOT, path: p, entries });
 });
 
 // GET /api/explorer/children?path= — sous-dossier
-router.get('/children', (req, res) => {
+router.get('/children', async (req, res) => {
   const p = req.query.path;
   if (!p) return res.status(400).json({ error: 'path requis' });
   const resolvedP = path.resolve(p);
   if (!resolvedP.toLowerCase().startsWith(ROOT.toLowerCase())) return res.status(403).json({ error: 'Accès refusé' });
-  res.json({ path: resolvedP, entries: readDir(resolvedP) });
+  res.json({ path: resolvedP, entries: await readDir(resolvedP) });
 });
 
 // GET /api/explorer/read?path= — lit un fichier texte (md, json, js…)
-router.get('/read', (req, res) => {
+router.get('/read', async (req, res) => {
   const p = req.query.path;
   if (!p) return res.status(400).json({ error: 'path requis' });
   const resolvedP = path.resolve(p);
   if (!resolvedP.toLowerCase().startsWith(ROOT.toLowerCase())) return res.status(403).json({ error: 'Accès refusé' });
   try {
-    const content = fs.readFileSync(resolvedP, 'utf8');
+    const content = await fs.readFile(resolvedP, 'utf8');
     res.json({ path: resolvedP, name: path.basename(resolvedP), content });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // POST /api/explorer/save — enregistre un fichier
-router.post('/save', (req, res) => {
+router.post('/save', async (req, res) => {
   const { path: p, content } = req.body;
   if (!p) return res.status(400).json({ error: 'path requis' });
-  if (!path.resolve(p).startsWith(ROOT)) return res.status(403).json({ error: 'Accès refusé' });
+  const resolvedP = path.resolve(p);
+  if (!resolvedP.toLowerCase().startsWith(ROOT.toLowerCase())) return res.status(403).json({ error: 'Accès refusé' });
   
   try {
-    fs.writeFileSync(p, content, 'utf8');
-    res.json({ ok: true, path: p, size: content.length });
+    await fs.writeFile(resolvedP, content, 'utf8');
+    res.json({ ok: true, path: resolvedP, size: content.length });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 // GET /api/explorer/open?path= — ouvre dans Explorer Windows
-router.get('/open', (req, res) => {
+router.get('/open', async (req, res) => {
   const p = req.query.path;
   if (!p) return res.status(400).json({ error: 'path requis' });
-  if (!path.resolve(p).startsWith(ROOT)) return res.status(403).json({ error: 'Accès refusé' });
+  const resolvedP = path.resolve(p);
+  if (!resolvedP.toLowerCase().startsWith(ROOT.toLowerCase())) return res.status(403).json({ error: 'Accès refusé' });
 
-  const stat = fs.existsSync(p) ? fs.statSync(p) : null;
-  // Si c'est un fichier, ouvre le dossier parent en sélectionnant le fichier
-  const cmd = stat && stat.isFile()
-    ? `explorer /select,"${p.replace(/\//g, '\\')}"`
-    : `explorer "${p.replace(/\//g, '\\')}"`;
+  try {
+    const stat = await fs.stat(resolvedP);
+    const cmd = stat.isFile()
+      ? `explorer /select,"${resolvedP.replace(/\//g, '\\')}"`
+      : `explorer "${resolvedP.replace(/\//g, '\\')}"`;
 
-  exec(cmd, err => {
-    if (err && !err.message.includes('ENOENT')) console.warn('explorer:', err.message);
-    res.json({ ok: true, cmd });
-  });
+    exec(cmd, err => {
+      if (err && !err.message.includes('ENOENT')) console.warn('explorer:', err.message);
+      res.json({ ok: true, cmd });
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 module.exports = router;
