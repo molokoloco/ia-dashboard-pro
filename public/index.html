@@ -22,12 +22,12 @@
   </header>
 
   <nav class="main-nav">
-    <a href="#home" class="nav-link active" data-view="home">🏠 Home</a>
-    <a href="#roadmap" class="nav-link" data-view="roadmap">🗺️ Roadmap</a>
+    <a href="#roadmap" class="nav-link active" data-view="roadmap">🗺️ Roadmap</a>
+    <a href="#home" class="nav-link" data-view="home">🏠 Home</a>
   </nav>
 
   <main>
-    <section id="view-home" class="view">
+    <section id="view-home" class="view" hidden>
     <!-- Explorer -->
     <div class="widget" id="w-explorer">
       <div class="widget-header">
@@ -84,7 +84,7 @@
     <!-- Articles + Wiki fusionnés -->
     <div class="widget span2" id="w-articles">
       <div class="widget-header">
-        <div class="widget-title"><span class="icon">✍️</span> Articles & Wiki</div>
+        <div class="widget-title"><span class="icon">✍️</span> Articles (Julienweb.fr)</div>
         <div class="widget-actions">
           <span class="badge" id="badge-articles">–</span>
           <a href="https://julienweb.fr/wp-admin/post-new.php" target="_blank" class="btn btn-sm btn-ghost">+ Article</a>
@@ -93,13 +93,19 @@
       <div class="widget-body tall" id="body-articles"><div class="loading">Chargement</div></div>
     </div>
 
-    <!-- Docs / Préférences -->
-    <div class="widget span2" id="w-docs">
+    <!-- Wiki — Prompts -->
+    <div class="widget span2" id="w-prompts">
       <div class="widget-header">
-        <div class="widget-title"><span class="icon">🗂️</span> Docs & Préférences</div>
-        <span class="badge" id="badge-docs">–</span>
+        <div class="widget-title"><span class="icon">📚</span> Wiki — Prompts</div>
+        <div class="widget-actions">
+          <span class="badge" id="badge-prompts">–</span>
+          <input type="text" id="prompts-search" placeholder="Rechercher (full-text)…"
+            style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);font-size:12px;outline:none;width:180px;">
+        </div>
       </div>
-      <div class="widget-body tall" id="body-docs"><div class="loading">Chargement</div></div>
+      <div class="widget-body" style="max-height:none; padding:0; overflow-y:auto;" id="body-prompts">
+        <div class="loading">Chargement</div>
+      </div>
     </div>
 
     <!-- Skills -->
@@ -130,7 +136,7 @@
 
     </section>
 
-    <section id="view-roadmap" class="view" hidden>
+    <section id="view-roadmap" class="view">
       <div class="meta-bar" id="roadmap-meta">Chargement…</div>
     </section>
 

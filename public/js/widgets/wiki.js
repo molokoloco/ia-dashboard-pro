@@ -22,7 +22,7 @@ export async function loadWiki() {
   const total = wpData.length || 0;
   const withWiki = wpData.filter(p => wikiIndex[p.slug]).length;
   
-  if ($('badge-articles')) $('badge-articles').textContent = `${total} articles · ${withWiki} wiki`;
+  if ($('badge-articles')) $('badge-articles').textContent = `${total} WP · ${withWiki} MD locaux`;
 
   if (!wpData.length) {
     body.innerHTML = '<div class="empty">Aucun article trouvé</div>';

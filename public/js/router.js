@@ -3,8 +3,8 @@ const VIEWS = ['home', 'roadmap'];
 
 export function initRouter(onChange) {
   function apply() {
-    const hash = (location.hash || '#home').replace('#', '');
-    const view = VIEWS.includes(hash) ? hash : 'home';
+    const hash = (location.hash || '#roadmap').replace('#', '');
+    const view = VIEWS.includes(hash) ? hash : 'roadmap';
     document.querySelectorAll('.view').forEach(s => {
       s.hidden = s.id !== `view-${view}`;
     });

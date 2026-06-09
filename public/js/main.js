@@ -7,7 +7,7 @@ import { loadTodos, addTodo } from './widgets/todo.js';
 import { loadCandidatures } from './widgets/candidatures.js';
 import { loadWiki } from './widgets/wiki.js';
 import { loadSessions } from './widgets/sessions.js';
-import { loadDocs } from './widgets/docs.js';
+import { loadPrompts } from './widgets/prompts.js';
 import { loadSkills } from './widgets/skills.js';
 import { loadScripts } from './widgets/scripts.js';
 import { loadRoadmap } from './widgets/roadmap.js';
@@ -41,7 +41,7 @@ async function loadAll() {
     loadCandidatures(),
     loadWiki(),
     loadSessions(),
-    loadDocs(),
+    loadPrompts(),
     loadScripts(),
     loadSkills()
   ]);
