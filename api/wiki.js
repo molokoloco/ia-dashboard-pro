@@ -5,7 +5,7 @@ const path = require('path');
 const { marked } = require('marked');
 const matter = require('gray-matter');
 
-const WIKI_BASE = path.join(__dirname, '../../wiki');
+const WIKI_BASE = path.join(__dirname, '../../../wiki');
 
 async function parseFile(filepath) {
   const raw = await fs.readFile(filepath, 'utf-8');

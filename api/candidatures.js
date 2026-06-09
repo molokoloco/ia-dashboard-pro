@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../db');
 
-const OFFRES_DIR = path.join(__dirname, '../../Offres');
+const OFFRES_DIR = path.join(__dirname, '../../../Projects/Julien-ia/Offres');
 
 // Sync PDF files from disk to DB on startup
 function syncOffres() {

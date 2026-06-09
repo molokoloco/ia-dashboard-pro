@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 
-const CV_DIR = path.join(__dirname, '../../cv');
+const CV_DIR = path.join(__dirname, '../../../Projects/cv');
 
 router.get('/', (req, res) => {
   const files = fs.readdirSync(CV_DIR)

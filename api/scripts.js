@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const router = express.Router();
 
-const SCRIPTS_DIR = path.join(__dirname, '../../scripts');
+const SCRIPTS_DIR = path.join(__dirname, '../../../scripts');
 
 router.get('/', (req, res) => {
   try {

@@ -5,9 +5,9 @@ const app = express();
 app.use(express.json());
 
 // Static file serving for PDFs
-app.use('/static/cv', express.static(path.join(__dirname, '../cv')));
-app.use('/static/offres', express.static(path.join(__dirname, '../Offres')));
-app.use('/static/julien-ia', express.static(path.join(__dirname, '../Julien-ia')));
+app.use('/static/cv', express.static(path.join(__dirname, '../../Projects/cv')));
+app.use('/static/offres', express.static(path.join(__dirname, '../../Projects/Julien-ia/Offres')));
+app.use('/static/julien-ia', express.static(path.join(__dirname, '../../Projects/Julien-ia')));
 
 // Frontend
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,7 +30,7 @@ app.use('/api/scripts', require('./api/scripts'));
 app.use('/api/roadmap', require('./api/roadmap'));
 
 const PORT = process.env.PORT || 3001;
-const workspaceRoot = path.resolve(__dirname, '..');
+const workspaceRoot = path.resolve(__dirname, '../..');
 console.log('  Workspace: ' + workspaceRoot);
 
 // Middleware to block sensitive files in /workspace
