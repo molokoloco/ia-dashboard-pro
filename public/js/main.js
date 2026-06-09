@@ -10,6 +10,8 @@ import { loadSessions } from './widgets/sessions.js';
 import { loadDocs } from './widgets/docs.js';
 import { loadSkills } from './widgets/skills.js';
 import { loadScripts } from './widgets/scripts.js';
+import { loadRoadmap } from './widgets/roadmap.js';
+import { initRouter } from './router.js';
 
 // ── Clock ────────────────────────────────────────────────
 function updateClock() {
@@ -49,9 +51,13 @@ async function init() {
   updateClock();
   setInterval(updateClock, 30000);
 
+  initRouter(view => {
+    if (view === 'roadmap') loadRoadmap();
+  });
+
   try {
     await loadConfig();
-    await loadExplorer(); 
+    await loadExplorer();
     await loadAll();
   } catch(e) {
     console.error("Initialization error:", e);

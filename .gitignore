@@ -5,6 +5,9 @@ widgets.json
 # Base de données SQLite
 *.db
 
+# Snapshot roadmap globale (regen via scripts/build_global_roadmap.js workspace)
+data/roadmap.json
+
 # Journal de sessions (données personnelles)
 sessions-log.json
 

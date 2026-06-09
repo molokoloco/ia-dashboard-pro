@@ -27,6 +27,7 @@ app.use('/api/docs', require('./api/docs'));
 app.use('/api/sessions', require('./api/sessions'));
 app.use('/api/explorer', require('./api/explorer'));
 app.use('/api/scripts', require('./api/scripts'));
+app.use('/api/roadmap', require('./api/roadmap'));
 
 const PORT = process.env.PORT || 3001;
 const workspaceRoot = path.resolve(__dirname, '..');

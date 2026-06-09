@@ -21,7 +21,13 @@
     </div>
   </header>
 
+  <nav class="main-nav">
+    <a href="#home" class="nav-link active" data-view="home">🏠 Home</a>
+    <a href="#roadmap" class="nav-link" data-view="roadmap">🗺️ Roadmap</a>
+  </nav>
+
   <main>
+    <section id="view-home" class="view">
     <!-- Explorer -->
     <div class="widget" id="w-explorer">
       <div class="widget-header">
@@ -121,6 +127,12 @@
       </div>
       <div class="widget-body" id="body-scripts" style="overflow-y:auto; max-height:300px;"><div class="loading">Chargement</div></div>
     </div>
+
+    </section>
+
+    <section id="view-roadmap" class="view" hidden>
+      <div class="meta-bar" id="roadmap-meta">Chargement…</div>
+    </section>
 
   </main>
 
