@@ -93,7 +93,10 @@ function buildProjectCard(p) {
   if (p.todos) {
     body.appendChild(buildSection('Todo', p.todos.items, p.todos.path));
   }
-  if (!p.roadmap && !p.todos) {
+  if (p.cases) {
+    body.appendChild(buildSection('Demandes en cours', p.cases.items, p.cases.path));
+  }
+  if (!p.roadmap && !p.todos && !p.cases) {
     const empty = document.createElement('div');
     empty.className = 'pw-empty';
     empty.textContent = 'Aucun ROADMAP.md ni TODO.md détecté.';
