@@ -141,6 +141,9 @@ main {
   grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
   gap: 20px;
 }
+#view-roadmap .roadmap-cand { grid-column: 1 / -1; }
+#view-roadmap .roadmap-cand .cand-link { color: var(--lightblue); text-decoration: none; }
+#view-roadmap .roadmap-cand .cand-link:hover { text-decoration: underline; }
 #view-roadmap .meta-bar {
   grid-column: 1 / -1;
   font-size: 12px;

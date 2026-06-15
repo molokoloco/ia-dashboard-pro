@@ -28,20 +28,6 @@
 
   <main>
     <section id="view-home" class="view" hidden>
-    <!-- Explorer -->
-    <div class="widget" id="w-explorer">
-      <div class="widget-header">
-        <div class="widget-title"><span class="icon">🗂</span> Explorateur</div>
-        <div class="widget-actions">
-          <span class="badge" id="badge-explorer">–</span>
-          <button class="btn btn-sm btn-ghost" onclick="openExplorerRoot()" title="Ouvrir racine dans Explorer">📂</button>
-        </div>
-      </div>
-      <div class="widget-body tall" id="body-explorer" style="padding:0; overflow-y:auto; max-height:420px;">
-        <div class="loading" style="padding:16px;">Chargement</div>
-      </div>
-    </div>
-
     <!-- Todo -->
     <div class="widget" id="w-todo">
       <div class="widget-header">
@@ -60,15 +46,6 @@
       <div class="widget-body" id="body-todo"><div class="loading">Chargement</div></div>
     </div>
 
-    <!-- CVs + Candidatures fusionnés -->
-    <div class="widget" id="w-candidatures">
-      <div class="widget-header">
-        <div class="widget-title"><span class="icon">💼</span> CVs & Candidatures</div>
-        <span class="badge" id="badge-cand">–</span>
-      </div>
-      <div class="widget-body tall" id="body-cand"><div class="loading">Chargement</div></div>
-    </div>
-
     <!-- Actions -->
     <div class="widget" id="w-actions">
       <div class="widget-header">
@@ -79,33 +56,6 @@
         </div>
       </div>
       <div class="widget-body tall" id="body-actions"><div class="loading">Chargement</div></div>
-    </div>
-
-    <!-- Articles + Wiki fusionnés -->
-    <div class="widget span2" id="w-articles">
-      <div class="widget-header">
-        <div class="widget-title"><span class="icon">✍️</span> Articles (Julienweb.fr)</div>
-        <div class="widget-actions">
-          <span class="badge" id="badge-articles">–</span>
-          <a href="https://julienweb.fr/wp-admin/post-new.php" target="_blank" class="btn btn-sm btn-ghost">+ Article</a>
-        </div>
-      </div>
-      <div class="widget-body tall" id="body-articles"><div class="loading">Chargement</div></div>
-    </div>
-
-    <!-- Wiki — Prompts -->
-    <div class="widget span2" id="w-prompts">
-      <div class="widget-header">
-        <div class="widget-title"><span class="icon">📚</span> Wiki — Prompts</div>
-        <div class="widget-actions">
-          <span class="badge" id="badge-prompts">–</span>
-          <input type="text" id="prompts-search" placeholder="Rechercher (full-text)…"
-            style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);font-size:12px;outline:none;width:180px;">
-        </div>
-      </div>
-      <div class="widget-body" style="max-height:none; padding:0; overflow-y:auto;" id="body-prompts">
-        <div class="loading">Chargement</div>
-      </div>
     </div>
 
     <!-- Skills -->
@@ -123,21 +73,34 @@
       </div>
     </div>
 
-    <!-- Scripts -->
-    <div class="widget span2" id="w-scripts">
+    <!-- Wiki — Prompts -->
+    <div class="widget span2" id="w-prompts">
       <div class="widget-header">
-        <div class="widget-title"><span class="icon">📜</span> Scripts Node.js disponibles</div>
+        <div class="widget-title"><span class="icon">📚</span> Wiki — Prompts</div>
         <div class="widget-actions">
-          <span class="badge" id="badge-scripts">–</span>
+          <span class="badge" id="badge-prompts">–</span>
+          <input type="text" id="prompts-search" placeholder="Rechercher (full-text)…"
+            style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text);font-size:12px;outline:none;width:180px;">
         </div>
       </div>
-      <div class="widget-body" id="body-scripts" style="overflow-y:auto; max-height:300px;"><div class="loading">Chargement</div></div>
+      <div class="widget-body" style="max-height:none; padding:0; overflow-y:auto;" id="body-prompts">
+        <div class="loading">Chargement</div>
+      </div>
     </div>
 
     </section>
 
     <section id="view-roadmap" class="view">
       <div class="meta-bar" id="roadmap-meta">Chargement…</div>
+
+      <!-- Candidatures — chaque candidature = une mini-roadmap (statut) -->
+      <div class="widget roadmap-cand" id="w-candidatures">
+        <div class="widget-header">
+          <div class="widget-title"><span class="icon">💼</span> Candidatures</div>
+          <span class="badge" id="badge-cand">–</span>
+        </div>
+        <div class="widget-body tall" id="body-cand"><div class="loading">Chargement</div></div>
+      </div>
     </section>
 
   </main>

@@ -18,7 +18,6 @@ app.use('/scrap', express.static(path.join(__dirname, '../scrap')));
 // API routes
 app.use('/api/wiki', require('./api/wiki'));
 app.use('/api/wordpress', require('./api/wordpress'));
-app.use('/api/cv', require('./api/cv'));
 app.use('/api/candidatures', require('./api/candidatures'));
 app.use('/api/todos', require('./api/todos'));
 app.use('/api/actions', require('./api/actions'));

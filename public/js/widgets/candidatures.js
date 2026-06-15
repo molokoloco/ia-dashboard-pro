@@ -1,5 +1,5 @@
-// js/widgets/candidatures.js
-import { $, esc, fmtDate, fmtSize } from '../utils.js';
+// js/widgets/candidatures.js — chaque candidature = une mini-roadmap (statut), onglet #roadmap
+import { $, esc, fmtDate } from '../utils.js';
 import { api } from '../api.js';
 import { unifiedPreview } from '../preview.js';
 import { openMdModal } from '../ui.js';
@@ -7,43 +7,20 @@ import { openMdModal } from '../ui.js';
 const CAND_STATUS = ['brouillon', 'envoyée', 'en attente', 'entretien', 'refusée', 'acceptée'];
 
 export async function loadCandidatures() {
-  const [cands, cvs] = await Promise.all([
-    api('/api/candidatures').catch(() => []),
-    api('/api/cv').catch(() => []),
-  ]);
+  const cands = await api('/api/candidatures').catch(() => []);
   const body = $('body-cand');
   if (!body) return;
 
-  const items = [
-    ...cands.map(c => ({ _type: 'cand', _date: new Date(c.date), ...c })),
-    ...cvs.map(f => ({
-      _type: 'cv', _date: new Date(f.modified),
-      filename: f.filename, url: f.url, ext: f.ext, size: f.size,
-    })),
-  ].sort((a, b) => b._date - a._date);
+  if ($('badge-cand')) $('badge-cand').textContent = `${cands.length} candidature${cands.length > 1 ? 's' : ''}`;
 
-  if ($('badge-cand')) $('badge-cand').textContent = `${cvs.length} CVs · ${cands.length} candidatures`;
-
-  if (!items.length) { body.innerHTML = '<div class="empty">Aucun fichier</div>'; return; }
+  if (!cands.length) { body.innerHTML = '<div class="empty">Aucune candidature</div>'; return; }
 
   const link = (url, label, company) => url
     ? `<a href="#" class="cand-link" data-url="${esc(url)}" data-name="${esc(label)} — ${esc(company || '')}">${label}</a>`
     : '';
 
-  body.innerHTML = items.map(item => {
-    if (item._type === 'cv') {
-      const p = (window.explorerRoot || '') + '/cv/' + item.filename;
-      return `
-      <div class="item clickable" data-path="${esc(p)}" data-name="${esc(item.filename)}" data-url="${item.url}">
-        <div class="item-main">
-          <div class="item-title">${esc(item.filename)}</div>
-          <div class="item-meta">${fmtDate(item._date)} · ${fmtSize(item.size)}</div>
-        </div>
-        <span class="type-pill">${item.ext}</span>
-      </div>`;
-    }
-
-    const metaBits = [fmtDate(item._date), item.lieu, item.contrat, item.salaire].filter(Boolean);
+  body.innerHTML = cands.map(item => {
+    const metaBits = [fmtDate(new Date(item.date)), item.lieu, item.contrat, item.salaire].filter(Boolean);
     const links = [
       link(item.cvUrl, 'CV', item.company),
       link(item.lettreUrl, 'lettre', item.company),
@@ -65,17 +42,12 @@ export async function loadCandidatures() {
       </div>`;
   }).join('');
 
-  // CV racine : preview standard (iframe pour pdf/html)
-  body.querySelectorAll('.item.clickable').forEach(el => {
-    el.onclick = () => unifiedPreview(el.dataset.path, el.dataset.name, el.dataset.url);
-  });
-  // Liens candidature (CV / lettre / offre) servis en statique
   body.querySelectorAll('.cand-link').forEach(el => {
     el.onclick = (e) => {
       e.preventDefault();
       const url = el.dataset.url, name = el.dataset.name;
       const ext = (url.split('?')[0].split('.').pop() || '').toLowerCase();
-      if (ext === 'md') previewMarkdownUrl(url, name);   // offre.md hors ROOT explorer
+      if (ext === 'md') previewMarkdownUrl(url, name);   // offre.md hors ROOT explorer → marked
       else unifiedPreview('', name, url);                // pdf/html → iframe
     };
   });
@@ -84,7 +56,6 @@ export async function loadCandidatures() {
   });
 }
 
-// Rend un .md servi statiquement dans la modale (offre.md vit hors du ROOT de /api/explorer)
 async function previewMarkdownUrl(url, name) {
   try {
     const res = await fetch(url);

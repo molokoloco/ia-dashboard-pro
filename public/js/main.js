@@ -1,15 +1,11 @@
 // js/main.js
 import { $ } from './utils.js';
-import { api } from './api.js';
 import { toggleEditMode, saveCurrentFile, closeMdModal } from './ui.js';
-import { loadExplorer, openExplorerRoot } from './widgets/explorer.js';
 import { loadTodos, addTodo } from './widgets/todo.js';
 import { loadCandidatures } from './widgets/candidatures.js';
-import { loadWiki } from './widgets/wiki.js';
 import { loadSessions } from './widgets/sessions.js';
 import { loadPrompts } from './widgets/prompts.js';
 import { loadSkills } from './widgets/skills.js';
-import { loadScripts } from './widgets/scripts.js';
 import { loadRoadmap } from './widgets/roadmap.js';
 import { initRouter } from './router.js';
 
@@ -25,24 +21,12 @@ function updateClock() {
 }
 
 // ── App State & Initialization ───────────────────────────
-let config = {};
-
-async function loadConfig() {
-  try {
-    config = await api('/api/explorer/config'); // This returns explorerDirs
-    // We could also fetch widgets.json directly if we had a route for it
-  } catch(e) { console.warn("Could not load config:", e); }
-}
-
 async function loadAll() {
   console.log('Refreshing data...');
   await Promise.allSettled([
     loadTodos(),
-    loadCandidatures(),
-    loadWiki(),
     loadSessions(),
     loadPrompts(),
-    loadScripts(),
     loadSkills()
   ]);
 }
@@ -52,12 +36,10 @@ async function init() {
   setInterval(updateClock, 30000);
 
   initRouter(view => {
-    if (view === 'roadmap') loadRoadmap();
+    if (view === 'roadmap') { loadRoadmap(); loadCandidatures(); }
   });
 
   try {
-    await loadConfig();
-    await loadExplorer();
     await loadAll();
   } catch(e) {
     console.error("Initialization error:", e);
@@ -71,7 +53,6 @@ window.toggleEditMode = toggleEditMode;
 window.saveCurrentFile = saveCurrentFile;
 window.closeMdModal = closeMdModal;
 window.addTodo = addTodo;
-window.openExplorerRoot = openExplorerRoot;
 
 // Initialize
 if (document.readyState === 'loading') {
