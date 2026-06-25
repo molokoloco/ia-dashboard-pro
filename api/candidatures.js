@@ -5,7 +5,8 @@ const path = require('path');
 const db = require('../db');
 
 // Source de vérité : dossiers datés du projet cv (YYYY-MM-DD_entreprise_poste/)
-const CAND_DIR = path.join(__dirname, '../../../Projects/cv/candidatures');
+// Déplacé 2026-06-25 : cv/ vit désormais dans coffre-fort-admin (chemin absolu, cross-dossier).
+const CAND_DIR = 'D:/Google Drive/MON ENTREPRISE/coffre-fort-admin/cv/candidatures';
 const DATED = /^\d{4}-\d{2}-\d{2}_/;
 
 // Mini-parseur de frontmatter YAML (lignes `key: value` entre les deux ---)

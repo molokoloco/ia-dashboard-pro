@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // Static file serving for PDFs
-app.use('/static/cv', express.static(path.join(__dirname, '../../Projects/cv')));
+app.use('/static/cv', express.static('D:/Google Drive/MON ENTREPRISE/coffre-fort-admin/cv')); // déplacé 2026-06-25
 app.use('/static/offres', express.static(path.join(__dirname, '../../Projects/Julien-ia/Offres')));
 app.use('/static/julien-ia', express.static(path.join(__dirname, '../../Projects/Julien-ia')));
 
