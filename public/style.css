@@ -962,3 +962,11 @@ main {
   .view { grid-template-columns: 1fr; gap: 24px; }
   .widget.span2, .widget.span3 { grid-column: span 1; }
 }
+
+/* CRM clients — groupes par statut (widget #w-clients) */
+.client-group { margin-bottom: 10px; }
+.client-group-head {
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  padding: 6px 0 4px; position: sticky; top: 0;
+  border-bottom: 1px solid var(--border, #333);
+}

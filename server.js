@@ -8,6 +8,7 @@ app.use(express.json());
 app.use('/static/cv', express.static('D:/Google Drive/MON ENTREPRISE/coffre-fort-admin/cv')); // déplacé 2026-06-25
 app.use('/static/offres', express.static(path.join(__dirname, '../../Projects/Julien-ia/Offres')));
 app.use('/static/julien-ia', express.static(path.join(__dirname, '../../Projects/Julien-ia')));
+app.use('/static/clients', express.static('D:/Google Drive/_WWW_/Julienweb.fr/clients')); // CRM fiches (lecture, local only)
 
 // Frontend
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,6 +20,7 @@ app.use('/scrap', express.static(path.join(__dirname, '../scrap')));
 app.use('/api/wiki', require('./api/wiki'));
 app.use('/api/wordpress', require('./api/wordpress'));
 app.use('/api/candidatures', require('./api/candidatures'));
+app.use('/api/clients', require('./api/clients'));
 app.use('/api/todos', require('./api/todos'));
 app.use('/api/actions', require('./api/actions'));
 app.use('/api/skills', require('./api/skills'));

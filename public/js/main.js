@@ -3,6 +3,7 @@ import { $ } from './utils.js';
 import { toggleEditMode, saveCurrentFile, closeMdModal } from './ui.js';
 import { loadTodos, addTodo } from './widgets/todo.js';
 import { loadCandidatures } from './widgets/candidatures.js';
+import { loadClients } from './widgets/clients.js';
 import { loadSessions } from './widgets/sessions.js';
 import { loadPrompts } from './widgets/prompts.js';
 import { loadSkills } from './widgets/skills.js';
@@ -36,7 +37,7 @@ async function init() {
   setInterval(updateClock, 30000);
 
   initRouter(view => {
-    if (view === 'roadmap') { loadRoadmap(); loadCandidatures(); }
+    if (view === 'roadmap') { loadRoadmap(); loadCandidatures(); loadClients(); }
   });
 
   try {
