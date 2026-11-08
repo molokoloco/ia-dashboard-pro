@@ -1,5 +1,5 @@
 // js/widgets/clients.js — CRM prestation JulienWeb (lecture seule, onglet #roadmap)
-// Source de vérité = fiches .md du projet Julienweb.fr/clients/. Statut dans le frontmatter.
+// Source de vérité = fiches .md du CRM julien-pro/clients/ (Julienweb.fr/clients/ jusqu'au 08/11/2026). Statut dans le frontmatter.
 import { $, esc } from '../utils.js';
 import { api } from '../api.js';
 import { openMdModal } from '../ui.js';

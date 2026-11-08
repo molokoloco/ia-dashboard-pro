@@ -3,9 +3,14 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 
-// Source de vérité : fiches CRM du projet Julienweb.fr (lecture seule).
+// Source de vérité : fiches CRM du projet Julien-Pro (lecture seule ; Julienweb.fr jusqu'au 08/11/2026).
 // Le statut vit dans le frontmatter de chaque fiche → pas d'overlay SQLite (≠ candidatures).
-const CRM_DIR = 'D:/Google Drive/_WWW_/Julienweb.fr/clients';
+// Chemin lu par ~/.claude/scripts/_chemins.js (bloc `chemins` de ecosysteme.json) ; repli : variable CRM_DIR.
+const CRM_DIR = (() => {
+  try { return require(path.join(require('os').homedir(), '.claude/scripts/_chemins.js')).chemin('crm'); }
+  catch { return process.env.CRM_DIR || 'D:/Google Drive/MON ENTREPRISE/julien-pro/clients'; }
+})();
+router.CRM_DIR = CRM_DIR;
 const FICHES_DIR = path.join(CRM_DIR, 'fiches');
 const INDEX_MD = path.join(CRM_DIR, 'INDEX.md');
 

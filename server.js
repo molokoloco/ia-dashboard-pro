@@ -8,7 +8,7 @@ app.use(express.json());
 app.use('/static/cv', express.static('D:/Google Drive/MON ENTREPRISE/coffre-fort-admin/cv')); // déplacé 2026-06-25
 app.use('/static/offres', express.static(path.join(__dirname, '../../Projects/Julien-ia/Offres')));
 app.use('/static/julien-ia', express.static(path.join(__dirname, '../../Projects/Julien-ia')));
-app.use('/static/clients', express.static('D:/Google Drive/_WWW_/Julienweb.fr/clients')); // CRM fiches (lecture, local only)
+app.use('/static/clients', express.static(require('./api/clients.js').CRM_DIR)); // CRM fiches (lecture, local only) — julien-pro/clients depuis le 08/11/2026
 
 // Frontend
 app.use(express.static(path.join(__dirname, 'public')));
